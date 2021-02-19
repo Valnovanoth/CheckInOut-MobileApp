@@ -1,0 +1,683 @@
+[
+    {
+        "id": "5f7539d4.65e018",
+        "type": "tab",
+        "label": "Timbrature_Stable",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d551dc19.17081",
+        "type": "http in",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "url": "/timbrature",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "cc0f4b0c.e2eab8",
+                "13318a9c.852e25"
+            ]
+        ]
+    },
+    {
+        "id": "cc0f4b0c.e2eab8",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 290,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "92f2c117.c5c27",
+        "type": "http response",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 1110,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "13318a9c.852e25",
+        "type": "json",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "41f15b04.7749d4",
+                "4d580b88.20f074",
+                "2794afa1.c2689"
+            ]
+        ]
+    },
+    {
+        "id": "f33951e.d2094b",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "Status 500",
+        "func": "msg.statuscode = 500;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 960,
+        "y": 260,
+        "wires": [
+            [
+                "92f2c117.c5c27"
+            ]
+        ]
+    },
+    {
+        "id": "cf1e33a6.69261",
+        "type": "inject",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "topic": "",
+        "payload": "{\"name\":\"Giuseppe\",\"surname\":\"Gambuzza\",\"badgeCode\":\"1200\",\"costCode\":\"231\",\"deviceId\":\"035df6020517693f\",\"type\":\"out\",\"beacon\":{\"proximity\":\"near\",\"major\":1,\"distance\":1.058260240923378,\"rssi\":-68,\"minor\":2,\"uuid\":\"c7c1a1bf-bb00-4cad-8704-9f2d2917ded2\"}}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 200,
+        "wires": [
+            [
+                "13318a9c.852e25"
+            ]
+        ]
+    },
+    {
+        "id": "41f15b04.7749d4",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 470,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4d580b88.20f074",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "insert into table Timbrature",
+        "func": "let t = msg.payload\nif ( 'beacon' in t ) {\n    query_string = \"INSERT INTO Timbrature (name, surname, badgeCode, costCode, deviceId, type, proximity, major, distance, rssi, minor, uuid)\";\n    values = \" VALUES ('\"+t.name+\"', '\"+t.surname+\"', '\"+msg.payload.badgeCode+\"', '\"+msg.payload.costCode+\"', '\"+msg.payload.deviceId+\"', '\"+msg.payload.type+\"', '\"+msg.payload.beacon.proximity+\"', '\"+msg.payload.beacon.major+\"', '\"+msg.payload.beacon.distance+\"', '\"+msg.payload.beacon.rssi+\"', '\"+msg.payload.beacon.minor+\"', '\"+msg.payload.beacon.uuid+\"');\";\n}\nif ( 'position' in t ) {\n    query_string = \"INSERT INTO Timbrature (name, surname, badgeCode, costCode, deviceId, type, latitude, longitude, accuracy)\";\n    values = \" VALUES ('\"+t.name+\"', '\"+t.surname+\"', '\"+msg.payload.badgeCode+\"', '\"+msg.payload.costCode+\"', '\"+msg.payload.deviceId+\"', '\"+msg.payload.type+\"', '\"+msg.payload.position.latitude+\"', '\"+msg.payload.position.longitude+\"', '\"+msg.payload.position.accuracy+\"');\";\n}\n\nmsg.topic = query_string + values;\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "5c289ea1.a7682",
+                "4a76a471.af142c"
+            ]
+        ]
+    },
+    {
+        "id": "5c289ea1.a7682",
+        "type": "mysql",
+        "z": "5f7539d4.65e018",
+        "mydb": "9f09cf0d.0648a",
+        "name": "database_mysql",
+        "x": 780,
+        "y": 200,
+        "wires": [
+            [
+                "945c031.6175b",
+                "bd968ead.bd3ec"
+            ]
+        ]
+    },
+    {
+        "id": "945c031.6175b",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 950,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4a76a471.af142c",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 770,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "bd968ead.bd3ec",
+        "type": "switch",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 850,
+        "y": 320,
+        "wires": [
+            [
+                "f33951e.d2094b"
+            ],
+            [
+                "92f2c117.c5c27"
+            ]
+        ]
+    },
+    {
+        "id": "2794afa1.c2689",
+        "type": "file",
+        "z": "5f7539d4.65e018",
+        "name": "log file",
+        "filename": "/home/admin/sigfox-node-red/timbrature.log",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "x": 450,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ce6e2ca9.0a132",
+        "type": "http in",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "url": "/badge",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 620,
+        "wires": [
+            [
+                "27f77464.41af0c",
+                "3c37eb5e.fb2444"
+            ]
+        ]
+    },
+    {
+        "id": "1de2fde9.123152",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "Verifica esistenza IMEI",
+        "func": "device_id = msg.payload.deviceId;\n\n//query_string = \"select nome, cognome, deviceId, badgeCode from badge where deviceId='\"\nquery_string = `select * from badge where deviceId='${device_id}' ;`\n\nmsg.topic = query_string;\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 440,
+        "wires": [
+            [
+                "ccd017ca.0917d8",
+                "a2d3ec48.074b"
+            ]
+        ]
+    },
+    {
+        "id": "35d80dcd.739282",
+        "type": "http response",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 1360,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "ccd017ca.0917d8",
+        "type": "mysql",
+        "z": "5f7539d4.65e018",
+        "mydb": "9f09cf0d.0648a",
+        "name": "database_mysql",
+        "x": 580,
+        "y": 440,
+        "wires": [
+            [
+                "b0b8e0f9.9b1f7",
+                "3012f5b.053820a"
+            ]
+        ]
+    },
+    {
+        "id": "cbc40e65.cd0d9",
+        "type": "switch",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 960,
+        "y": 500,
+        "wires": [
+            [
+                "e86705de.fdd888",
+                "63068d66.d6c4a4"
+            ],
+            [
+                "f02a8189.21eb6",
+                "c5a299cc.3d6498"
+            ]
+        ]
+    },
+    {
+        "id": "e86705de.fdd888",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "Status 500",
+        "func": "msg.statuscode = 500;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1140,
+        "y": 480,
+        "wires": [
+            [
+                "35d80dcd.739282",
+                "87bf1cb2.a2f42"
+            ]
+        ]
+    },
+    {
+        "id": "c5a299cc.3d6498",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "Codice",
+        "func": "msg.payload = msg.payload;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1130,
+        "y": 540,
+        "wires": [
+            [
+                "35d80dcd.739282",
+                "87bf1cb2.a2f42"
+            ]
+        ]
+    },
+    {
+        "id": "d3e135fc.759d38",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 770,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "27f77464.41af0c",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 310,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "f95d5e1a.9d6da",
+        "type": "inject",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "topic": "",
+        "payload": "{\"deviceId\":\"db5ef48907817435\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "1de2fde9.123152"
+            ]
+        ]
+    },
+    {
+        "id": "87bf1cb2.a2f42",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1360,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "57a51c53.371e34",
+        "type": "inject",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "topic": "",
+        "payload": "{\"deviceId\":\"db5ef48907817440\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "1de2fde9.123152"
+            ]
+        ]
+    },
+    {
+        "id": "63068d66.d6c4a4",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1100,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f02a8189.21eb6",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1100,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "3c37eb5e.fb2444",
+        "type": "json",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 290,
+        "y": 560,
+        "wires": [
+            [
+                "1de2fde9.123152"
+            ]
+        ]
+    },
+    {
+        "id": "b0b8e0f9.9b1f7",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "output cleaning",
+        "func": "if ( msg.payload.length == 0 ) {\n    msg.payload = {}\n    msg.statusCode = 401\n} else {\n    let t = msg.payload[0]\n    t.badgeCode = t.badgeCode.toString()\n    msg.payload = t\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 680,
+        "y": 560,
+        "wires": [
+            [
+                "d3e135fc.759d38",
+                "4f87043e.2bd26c"
+            ]
+        ]
+    },
+    {
+        "id": "4f87043e.2bd26c",
+        "type": "http response",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 910,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "3012f5b.053820a",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 790,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b64cd1f5.df6cd",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "insert richiesta associazione",
+        "func": "device_id = msg.payload.deviceId;\nname = msg.payload.name;\nsurname = msg.payload.surname;\n\n//params = \"'\" +device_id + \"', '\" + name + \"', '\" + surname + \"'\"\n//query_string = \"insert into registrazione (deviceId, nome, cognome) values (\" + params + \");\"\nquery_string = `\n    insert into registrazione (deviceId, nome, cognome)\n    values ( '${device_id}' , '${name}', '${surname}' )\n    ON DUPLICATE KEY UPDATE nome = '${name}', cognome = '${surname}'\n    `\n//query_string = `\n//    insert into registrazione (deviceId, nome, cognome)\n//    values (:deviceId, :name, :surname)\n//     ON DUPLICATE KEY UPDATE nome = :name , cognome = :surname\n//    ;`\n\nmsg.topic = query_string;\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 900,
+        "wires": [
+            [
+                "1d76f751.592fe9",
+                "cc0592ab.61ed5"
+            ]
+        ]
+    },
+    {
+        "id": "1d76f751.592fe9",
+        "type": "mysql",
+        "z": "5f7539d4.65e018",
+        "mydb": "9f09cf0d.0648a",
+        "name": "database_mysql_associazione",
+        "x": 430,
+        "y": 840,
+        "wires": [
+            [
+                "b23ceec.0732f1",
+                "1eb05aed.806b75"
+            ]
+        ]
+    },
+    {
+        "id": "63dc2d92.68e124",
+        "type": "http in",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "url": "/richiesta",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "b64cd1f5.df6cd"
+            ]
+        ]
+    },
+    {
+        "id": "b23ceec.0732f1",
+        "type": "function",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "func": "if ( msg.payload.insertId === 0 && msg.payload.affectedRows === 1 ) {\n    // è gia presente una richiesta ma NON è stata aggiornata\n    let t = { \n        requestId : 0\n    }\n    msg.payload = t\n}\nif ( msg.payload.insertId > 0 ) {\n    // è stata inserita una nuova richiesta\n    let t = {\n        requestId : msg.payload.insertId\n    }\n    msg.payload = t\n    // msg.statusCode = 500\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 900,
+        "wires": [
+            [
+                "a44d0164.18f25"
+            ]
+        ]
+    },
+    {
+        "id": "1eb05aed.806b75",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 710,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "a44d0164.18f25",
+        "type": "http response",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 730,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "f6460299.7fc28",
+        "type": "catch",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "scope": [
+            "1d76f751.592fe9"
+        ],
+        "x": 470,
+        "y": 760,
+        "wires": [
+            [
+                "b6cac1c9.cd0b5"
+            ]
+        ]
+    },
+    {
+        "id": "b6cac1c9.cd0b5",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 680,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "a2d3ec48.074b",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 570,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "cc0592ab.61ed5",
+        "type": "debug",
+        "z": "5f7539d4.65e018",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 470,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "9f09cf0d.0648a",
+        "type": "MySQLdatabase",
+        "z": "",
+        "host": "192.168.0.15",
+        "port": "3306",
+        "db": "MITIMBRA",
+        "tz": ""
+    }
+]
