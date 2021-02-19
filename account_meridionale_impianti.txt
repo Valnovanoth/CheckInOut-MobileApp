@@ -1,0 +1,14 @@
+ANDROID DEVELOPER ACCOUNT
+developer.meridionale@gmail.com
+Meridionale.2020
+
+data di nascita 06/10/2000
+
+PANNELLO AMMINISTRATIVO
+http://mitimbra.merimp.com/associa.php
+
+UUID BEACON
+{
+  identifier: "REGION1",
+  uuid: "c7c1a1bf-bb00-4cad-8704-9f2d2917ded2",
+}
